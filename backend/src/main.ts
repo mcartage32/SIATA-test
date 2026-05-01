@@ -7,7 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Agregemos el ValidationPipe global para validar las solicitudes entrantes
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Eliminar campos no permitidos
+      forbidNonWhitelisted: true, // Lanza error si mandan basura
+      transform: true, // Convertir tipos automáticamente
+    }),
+  );
   // Se agrega un prefijo y una version "1" quemada por efectos de la prueba
   app.setGlobalPrefix('api/v1');
   // Habilitamos CORS para permitir solicitudes desde cualquier origen (solo para temas de la prueba)
@@ -17,10 +23,12 @@ async function bootstrap() {
     .setTitle('SIATA - API Test')
     .setDescription('API para el test de SIATA')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
