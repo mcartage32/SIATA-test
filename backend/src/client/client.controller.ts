@@ -83,7 +83,8 @@ export class ClientController {
 
   @ApiOperation({ summary: 'Delete client' })
   @ApiParam({ name: 'maskUuid' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, description: 'Client deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Not found' })
   @Delete(':maskUuid')
   remove(@Param() { maskUuid }: MaskUuidParamDto) {
     return this.service.remove(maskUuid);

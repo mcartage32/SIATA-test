@@ -4,10 +4,10 @@ import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule } from '@nestjs/config';
 import { ClientModule } from './client/client.module.js';
 import { ProductModule } from './product/product.module.js';
+import { PortModule } from './port/port.module.js';
 
 @Module({
   imports: [
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -15,6 +15,7 @@ import { ProductModule } from './product/product.module.js';
     AuthModule,
     ClientModule,
     ProductModule,
+    PortModule,
   ],
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ProductService } from './product.service.js';
+import { PortService } from './port.service.js';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -18,72 +18,72 @@ import {
   ApiTags,
   ApiParam,
 } from '@nestjs/swagger';
-import { CreateProductDto } from './dtos/create-product.dto.js';
-import { UpdateProductDto } from './dtos/update-product.dto.js';
-import { QueryProductDto } from './dtos/query-product.dto.js';
+import { CreatePortDto } from './dtos/create-port.dto.js';
+import { UpdatePortDto } from './dtos/update-port.dto.js';
+import { QueryPortDto } from './dtos/query-port.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard.js';
 import { PaginatedDto } from '../common/dtos/paginated-response.dto.js';
 import {
-  ProductResponseDto,
-  ProductResponseSelectDto,
-} from './dtos/product-response.dto.js';
+  PortResponseDto,
+  PortResponseSelectDto,
+} from './dtos/port-response.dto.js';
 import { MaskUuidParamDto } from '../common/dtos/maskUuid.dto.js';
 import type { RequestWithUser } from '../interfaces/requestWithUser.interface.js';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags('Products')
-@Controller('products')
-export class ProductController {
-  constructor(private readonly service: ProductService) {}
+@ApiTags('Ports')
+@Controller('ports')
+export class PortController {
+  constructor(private readonly service: PortService) {}
 
-  @ApiOperation({ summary: 'Create product' })
-  @ApiResponse({ status: 201, type: ProductResponseDto })
+  @ApiOperation({ summary: 'Create port' })
+  @ApiResponse({ status: 201, type: PortResponseDto })
   @Post()
-  create(@Body() dto: CreateProductDto, @Req() req: RequestWithUser) {
+  create(@Body() dto: CreatePortDto, @Req() req: RequestWithUser) {
     return this.service.create(dto, req.user.email);
   }
 
-  @ApiOperation({ summary: 'List products (paginated)' })
-  @ApiResponse({ status: 200, type: PaginatedDto(ProductResponseDto) })
+  @ApiOperation({ summary: 'List ports (paginated)' })
+  @ApiResponse({ status: 200, type: PaginatedDto(PortResponseDto) })
   @Get()
-  findAll(@Query() query: QueryProductDto) {
+  findAll(@Query() query: QueryPortDto) {
     return this.service.findAll(query);
   }
 
-  @ApiOperation({ summary: 'Products for select' })
-  @ApiResponse({ status: 200, type: [ProductResponseSelectDto] })
+  @ApiOperation({ summary: 'Ports for select' })
+  @ApiResponse({ status: 200, type: [PortResponseSelectDto] })
   @Get('select')
   findSelectOptions() {
     return this.service.findSelectOptions();
   }
 
-  @ApiOperation({ summary: 'Get product by mask_uuid' })
+  @ApiOperation({ summary: 'Get port by mask_uuid' })
   @ApiParam({
     name: 'maskUuid',
     example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @ApiResponse({ status: 200, type: ProductResponseDto })
+  @ApiResponse({ status: 200, type: PortResponseDto })
   @ApiResponse({ status: 404, description: 'Not found' })
   @Get(':maskUuid')
   findOne(@Param() { maskUuid }: MaskUuidParamDto) {
     return this.service.findByMaskUuid(maskUuid);
   }
 
-  @ApiOperation({ summary: 'Update product' })
-  @ApiResponse({ status: 200, type: ProductResponseDto })
+  @ApiOperation({ summary: 'Update port' })
+  @ApiResponse({ status: 200, type: PortResponseDto })
   @ApiResponse({ status: 404, description: 'Not found' })
   @Patch(':maskUuid')
   update(
     @Param() { maskUuid }: MaskUuidParamDto,
-    @Body() dto: UpdateProductDto,
+    @Body() dto: UpdatePortDto,
     @Req() req: RequestWithUser,
   ) {
     return this.service.update(maskUuid, dto, req.user.email);
   }
 
-  @ApiOperation({ summary: 'Delete product' })
-  @ApiResponse({ status: 200, description: 'Product deleted successfully' })
+  @ApiOperation({ summary: 'Delete port' })
+  @ApiResponse({ status: 200, description: 'Port deleted successfully' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @Delete(':maskUuid')
   remove(@Param() { maskUuid }: MaskUuidParamDto) {
