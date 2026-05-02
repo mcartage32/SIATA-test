@@ -1,8 +1,8 @@
 import { BASE_SELECT } from '../../common/constants/audit.select.js';
 
-export const CLIENT_SELECT = {
+export const PRODUCT_SELECT = {
   name: true,
-  email: true,
-  phone: true,
+  description: true,
+  price: true,
   ...BASE_SELECT,
 } as const;
