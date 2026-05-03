@@ -9,7 +9,7 @@ datasource db {
 
 model app_user {
   id         Int       @id @default(autoincrement())
-  mask_uuid  String    @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid  String    @unique @default(uuid()) @db.Uuid
   email      String    @unique @db.VarChar(150)
   password   String    @db.VarChar(255)
   created_at DateTime? @default(now()) @db.Timestamptz(6)
@@ -20,7 +20,7 @@ model app_user {
 
 model client {
   id         Int        @id @default(autoincrement())
-  mask_uuid  String     @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid  String     @unique @default(uuid()) @db.Uuid
   name       String     @db.VarChar(100)
   email      String     @unique @db.VarChar(150)
   phone      String?    @db.VarChar(20)
@@ -34,7 +34,7 @@ model client {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model land_shipment {
   shipment_id   Int       @id
-  mask_uuid     String    @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid     String    @unique @default(uuid()) @db.Uuid
   warehouse_id  Int
   vehicle_plate String    @db.VarChar(6)
   created_at    DateTime? @default(now()) @db.Timestamptz(6)
@@ -47,7 +47,7 @@ model land_shipment {
 
 model port {
   id           Int            @id @default(autoincrement())
-  mask_uuid    String         @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid    String         @unique @default(uuid()) @db.Uuid
   name         String         @db.VarChar(100)
   location     String?        @db.VarChar(150)
   created_at   DateTime?      @default(now()) @db.Timestamptz(6)
@@ -59,7 +59,7 @@ model port {
 
 model product {
   id            Int             @id @default(autoincrement())
-  mask_uuid     String          @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid     String          @unique @default(uuid()) @db.Uuid
   name          String          @db.VarChar(100)
   description   String?
   price         Decimal         @db.Decimal(10, 2)
@@ -73,7 +73,7 @@ model product {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model sea_shipment {
   shipment_id  Int       @id
-  mask_uuid    String    @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid    String    @unique @default(uuid()) @db.Uuid
   port_id      Int
   fleet_number String    @db.VarChar(8)
   created_at   DateTime? @default(now()) @db.Timestamptz(6)
@@ -87,7 +87,7 @@ model sea_shipment {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model shipment {
   id                Int             @id @default(autoincrement())
-  mask_uuid         String          @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid         String          @unique @default(uuid()) @db.Uuid
   type              String          @db.VarChar(20)
   client_id         Int
   registration_date DateTime?       @default(now()) @db.Timestamptz(6)
@@ -114,7 +114,7 @@ model shipment {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model shipment_item {
   id          Int       @id @default(autoincrement())
-  mask_uuid   String    @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid   String    @unique @default(uuid()) @db.Uuid
   shipment_id Int
   product_id  Int
   quantity    Int
@@ -133,7 +133,7 @@ model shipment_item {
 
 model warehouse {
   id            Int             @id @default(autoincrement())
-  mask_uuid     String          @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  mask_uuid     String          @unique @default(uuid()) @db.Uuid
   name          String          @db.VarChar(100)
   location      String?         @db.VarChar(150)
   created_at    DateTime?       @default(now()) @db.Timestamptz(6)
