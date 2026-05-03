@@ -91,7 +91,7 @@ model shipment {
   type              String          @db.VarChar(20)
   client_id         Int
   registration_date DateTime?       @default(now()) @db.Timestamptz(6)
-  delivery_date     DateTime        @db.Timestamptz(6)
+  delivery_date     DateTime        @db.Date
   base_price        Decimal         @db.Decimal(10, 2)
   discount_percent  Decimal?        @default(0) @db.Decimal(5, 2)
   discount_amount   Decimal?        @default(0) @db.Decimal(10, 2)
