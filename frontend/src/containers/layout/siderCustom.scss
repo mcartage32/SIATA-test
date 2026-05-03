@@ -1,0 +1,105 @@
+.ant-menu {
+  background: transparent !important;
+}
+
+// Items
+.ant-menu-item {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff !important;
+}
+
+.ant-menu-item-selected {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: #ffffff;
+  color: #fff !important;
+}
+
+// Iconos
+.ant-menu-item .anticon,
+.ant-menu-item svg {
+  color: #fff !important;
+}
+
+// Quitar fondo azul default de Antd
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: transparent !important;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+// Submenu padre
+.ant-menu-submenu-title {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.ant-menu-submenu-title:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+// Items hijos del submenu
+.ant-menu-submenu .ant-menu-item {
+  margin: 4px 20px;
+  border-radius: 8px;
+}
+
+.ant-menu-submenu .ant-menu-item {
+  margin: 6px 12px;
+  width: calc(100% - 24px);
+  border-radius: 8px;
+}
+
+.ant-menu-item .anticon,
+.ant-menu-item svg,
+.ant-menu-submenu-title .anticon,
+.ant-menu-submenu-title svg {
+  color: #fff !important;
+}
+
+// Flecha del submenu
+.ant-menu-submenu-arrow {
+  color: #fff !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected,
+.ant-menu-dark .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  background-color: transparent !important;
+}
+
+/* Fondo del popup del submenu */
+.ant-menu-submenu-popup .ant-menu {
+  background-color: #0f172a !important; /* o el color que uses en sidebar */
+  border-radius: 10px;
+}
+
+/* Items dentro del popup */
+.ant-menu-submenu-popup .ant-menu-item {
+  color: #fff !important;
+}
+
+/* Hover de items del popup */
+.ant-menu-submenu-popup .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+/* Item seleccionado en popup */
+.ant-menu-submenu-popup .ant-menu-item-selected {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
