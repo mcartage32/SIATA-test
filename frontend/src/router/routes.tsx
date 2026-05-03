@@ -5,7 +5,7 @@ import { lazy } from "react";
 // Componentes de prueba
 const Login = lazy(() => import("@/containers/pages/auth/Login"));
 const Register = lazy(() => import("@/containers/pages/auth/Register"));
-const Clients = () => <div>Clientes pagina</div>;
+const Clients = lazy(() => import("@/containers/pages/clients"));
 const Products = () => <div>Productos pagina</div>;
 const Ports = () => <div>Puertos pagina</div>;
 const Warehouses = () => <div>Bodegas pagina</div>;

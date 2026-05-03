@@ -6,7 +6,7 @@ import { ConfigProvider } from "antd";
 import Router from "./router/index.tsx";
 import esES from "antd/locale/es_ES";
 import dayjs from "dayjs";
-import "./main.scss";
+import "./main.css";
 import "dayjs/locale/es";
 
 dayjs.locale("es");
