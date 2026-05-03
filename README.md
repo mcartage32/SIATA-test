@@ -31,7 +31,7 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 │   │   │   └── validators/
 │   │   ├── generated/
 │   │   ├── interfaces/
-│   │   ├── port/         # Esta misma estructura se repite en los demas modulos
+│   │   ├── port/         # Esta misma estructura se repite en los demás módulos
 │   │   │   ├── constants/
 │   │   │   ├── dtos/
 │   │   │   ├── port.controller.ts
@@ -98,8 +98,10 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 - PostgreSQL
 - Bun o npm
 
-> **Nota:** El proyecto esta configurado para correr en los puertos determinados: postgres en 5432, NestJs en 300 y React en 5173
+> **Nota 1:** El proyecto está configurado para correr en los puertos determinados: postgres en 5432, NestJs en 300 y React en 5173
 
+
+> **Nota 2:** La prueba fue desarrollada utilizando Bun tanto en el backend como en el frontend. Se recomienda su uso como runtime principal debido a su rendimiento y eficiencia en la instalación y ejecución de dependencias.
 ---
 
 ## 4. Tecnologías Utilizadas
@@ -372,8 +374,8 @@ docker compose up --build
 - Se pueden agregar logs
 - Mejoras en responsive
 - Posible implementación de inventario
-- Mayor reutilizacion de componentes en el front
-- No se desplego en algun servidor publico por cuestiones de tiempo.
+- Mayor reutilización de componentes en el front
+- No se desplegó en algún servidor público por cuestiones de tiempo.
 
 ---
 
