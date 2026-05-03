@@ -58,10 +58,20 @@ export const CreateShipmentModal = ({ open, onClose }: Props) => {
         form.resetFields();
         onClose();
       },
-      onError: () => {
+      onError: (error: any) => {
+        const message = error?.response?.data?.message;
+
+        if (message === "Duplicate products are not allowed") {
+          createNotification.error({
+            title: "Error",
+            description: "Hay productos duplicados. Por favor reviselos",
+          });
+          return;
+        }
+
         createNotification.error({
           title: "Error",
-          description: "No se pudo crear el envío",
+          description: "No se pudo crear el envío.",
         });
       },
     });
