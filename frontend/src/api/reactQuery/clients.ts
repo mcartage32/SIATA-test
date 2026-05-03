@@ -34,8 +34,8 @@ export const useClientsListQuery = (params?: IPaginationParams) => {
 export const useClientsSelectOptionsQuery = () => {
   return useQuery({
     queryKey: ["clientsSelectOptions"],
-    queryFn: async (): Promise<ISelectOption> => {
-      const response = await axiosInstance.get<ISelectOption>(
+    queryFn: async (): Promise<ISelectOption[]> => {
+      const response = await axiosInstance.get<ISelectOption[]>(
         ENDPOINTS.CLIENTS_SELECT_OPTIONS,
       );
       return response.data;

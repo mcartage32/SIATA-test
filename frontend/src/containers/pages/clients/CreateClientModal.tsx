@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal, Form, Input } from "antd";
 import { useEffect } from "react";
 import { useCreateClientMutation } from "@/api/reactQuery";
@@ -58,7 +59,7 @@ export const CreateClientModal = ({ open, onClose }: Props) => {
 
   useEffect(() => {
     if (!open) form.resetFields();
-  }, [open, form]);
+  }, [open]);
 
   return (
     <Modal

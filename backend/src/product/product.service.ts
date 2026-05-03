@@ -49,13 +49,20 @@ export class ProductService {
   }
 
   async findSelectOptions() {
-    return this.prisma.product.findMany({
+    const products = await this.prisma.product.findMany({
       select: {
         mask_uuid: true,
         name: true,
+        price: true,
       },
       orderBy: { name: 'asc' },
     });
+
+    return products.map((p) => ({
+      mask_uuid: p.mask_uuid,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      name: `${p.name} - $${p.price}`,
+    }));
   }
 
   async findByMaskUuid(maskUuid: string) {

@@ -13,6 +13,8 @@ const ENDPOINTS = {
   WAREHOUSES_LIST: "/warehouses",
   WAREHOUSES_SELECT_OPTIONS: "/warehouses/select",
   WAREHOUSES_ID: (maskuuid: string) => `/warehouses/${maskuuid}`,
+  SHIPMENTS_LIST: "/shipments",
+  SHIPMENTS_ID: (maskuuid: string) => `/shipments/${maskuuid}`,
 };
 
 export default ENDPOINTS;

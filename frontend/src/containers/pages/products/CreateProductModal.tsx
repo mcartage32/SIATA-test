@@ -59,7 +59,7 @@ export const CreateProductModal = ({ open, onClose }: Props) => {
         <Form.Item name="price" label="Precio" rules={[{ required: true }]}>
           <InputNumber
             className="w-full"
-            min={0}
+            min={1}
             controls={false}
             onKeyDown={(e) => {
               const allowedKeys = [

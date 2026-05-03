@@ -2,14 +2,13 @@
 import { PRIVATE_ROUTE, PUBLIC_ROUTE } from "@/constants";
 import { lazy } from "react";
 
-// Componentes de prueba
 const Login = lazy(() => import("@/containers/pages/auth/Login"));
 const Register = lazy(() => import("@/containers/pages/auth/Register"));
 const Clients = lazy(() => import("@/containers/pages/clients"));
 const Products = lazy(() => import("@/containers/pages/products"));
 const Ports = lazy(() => import("@/containers/pages/ports"));
 const Warehouses = lazy(() => import("@/containers/pages/warehouses"));
-const Shipments = () => <div>Envios pagina</div>;
+const Shipments = lazy(() => import("@/containers/pages/shipments"));
 
 // Rutas publicas
 export const publicRoutes: { component: React.FC; path: string }[] = [

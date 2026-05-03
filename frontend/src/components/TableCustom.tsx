@@ -24,26 +24,35 @@ export function TableCustom<T extends object>({
   ...rest
 }: Props<T>) {
   return (
-    <div className="w-full px-4 md:px-8 py-6">
+    <div className="w-full px-2 md:px-8 py-6">
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 md:p-6">
         {(title || extra) && (
-          <div className="grid grid-cols-3 items-center mb-6">
-            <div />
-            <div className="flex justify-center">
+          <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:items-center mb-6">
+            {/* Espacio izquierdo solo en desktop */}
+            <div className="hidden md:block" />
+
+            {/* Título */}
+            <div className="flex justify-center order-1 md:order-none">
               {title && (
                 <h2 className="text-xl md:text-2xl font-semibold text-center break-words">
                   {title}
                 </h2>
               )}
             </div>
-            <div className="flex justify-end">{extra}</div>
+
+            {/* Botón / extra */}
+            <div className="flex justify-end order-2 md:order-none">
+              {extra}
+            </div>
           </div>
         )}
+
         <Table
           {...rest}
           dataSource={data}
           loading={loading}
           rowKey="mask_uuid"
+          className="w-full"
           pagination={{
             current: page,
             pageSize,
@@ -51,6 +60,9 @@ export function TableCustom<T extends object>({
             onChange: onPageChange,
             showSizeChanger: true,
             pageSizeOptions: ["5", "10", "20", "50"],
+            responsive: false,
+            showLessItems: false,
+            className: "flex flex-wrap gap-2 justify-end",
           }}
           scroll={{
             y: "calc(100vh - 300px)",
