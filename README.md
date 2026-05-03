@@ -125,6 +125,7 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 ---
 
 ## 5. Variables de Entorno
+> **Nota:** Estas variables están definidas para un entorno de desarrollo y pruebas. En un entorno de producción, deben configurarse de forma segura y externa al repositorio.
 
 ### Backend
 
@@ -137,7 +138,7 @@ JWT_SECRET=clave_para_prueba_SIATA
 ### Frontend
 
 ```env
-VITE_API_URL=http://localhost:3000/api
+VITE_API_URL=http://localhost:3000/api/v1/
 ```
 
 ---
@@ -146,7 +147,7 @@ VITE_API_URL=http://localhost:3000/api
 
 ### 6.1 Instalación y ejecución con Docker
 
-> **Nota:** Luego de clonar el repositorio, se debe crear los respectivos archivos .env en las carpetas backend y frontend, con los respectivos valores.
+> **Nota:** Luego de clonar el repositorio, se deben crear los respectivos archivos .env en las carpetas backend y frontend, con los respectivos valores.
 
 Desde la raíz del proyecto, ejecuta el siguiente comando para levantar la base de datos, el backend y el frontend automáticamente:
 
@@ -209,7 +210,7 @@ bun run start:dev
 El backend correrá en:
 
 ```
-http://localhost:3000/graphql
+http://localhost:3000
 ```
 
 ---
@@ -237,7 +238,7 @@ npm install
 3. Crear archivo .env
 
 ```env
-VITE_API_URL=http://localhost:3000/graphql
+VITE_API_URL=http://localhost:3000/api/v1/
 ```
 
 4. Ejecutar proyecto:
@@ -268,7 +269,7 @@ http://localhost:5173
 
 ## 8. Script de Base de Datos
 
-Se utiliza Prisma para la generación del esquema.
+En la raíz del proyecto se incluye un archivo .sql con el script necesario para la creación de la base de datos y sus tablas en PostgreSQL. Este script puede utilizarse para inicializar la estructura base del sistema de forma manual en caso de no utilizar migraciones. El backend está construido con Prisma, el cual se encarga de la definición del esquema y la gestión de la base de datos a través de su sistema de migraciones.
 
 Ejemplo UUID:
 
