@@ -1,73 +1,159 @@
-# React + TypeScript + Vite
+# SIATA - Sistema de Gestión de Envíos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. Descripción General
 
-Currently, two official plugins are available:
+Sistema fullstack para la gestión de envíos (terrestres y marítimos), construido con una arquitectura desacoplada entre frontend y backend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Backend: NestJS + REST + Prisma
+- Frontend: React + Vite + React Query
+- Base de datos: PostgreSQL
+- Orquestación: Docker
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 2. Tecnologías Utilizadas
 
-## Expanding the ESLint configuration
+### Backend
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- NestJS
+- Prisma ORM
+- PostgreSQL
+- Swagger (documentación API)
+- class-validator / class-transformer
+- JWT (estructura preparada)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- React + Vite
+- React Query
+- Axios
+- Ant Design
+- TailwindCSS
+- Zustand
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 3. Diagrama E-R (Descripción)
+
+Entidades principales:
+
+- client (1) --- (N) shipment
+- shipment (1) --- (N) shipment_item
+- shipment_item (N) --- (1) product
+- shipment (1) --- (1) land_shipment
+- shipment (1) --- (1) sea_shipment
+- land_shipment (N) --- (1) warehouse
+- sea_shipment (N) --- (1) port
+
+---
+
+## 4. Script de Base de Datos
+
+Se utiliza Prisma para la generación del esquema.
+
+Ejemplo UUID:
+
+- Se usa @default(uuid()) desde Prisma
+- No se usa uuid-ossp
+
+---
+
+## 5. API
+
+Documentación disponible en:
+
+http://localhost:3000/api/docs
+
+Tipo: REST
+
+---
+
+## 6. Reglas de Negocio
+
+Los envíos solo permiten actualizar:
+
+- delivery_date
+- items
+- vehiclePlate
+- fleetNumber
+- warehouse
+- port
+
+---
+
+## 7. Artefactos de Despliegue
+
+Se incluyen:
+
+- Dockerfile (backend)
+- Dockerfile (frontend)
+- docker-compose.yml
+
+Ejecución:
+
+```bash
+docker compose up --build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 8. Buenas Prácticas Aplicadas
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Separación por capas (controller, service, repository)
+- DTOs para validación
+- Uso de interfaces tipadas en frontend
+- Manejo de estado con React Query
+- Reutilización de componentes
+- Normalización de base de datos
+- Uso de UUID como identificador externo
+- Evitar lógica en controladores
+
+---
+
+## 9. Justificación Tecnológica
+
+### NestJS
+
+- Arquitectura escalable
+- Modularidad
+- Buen soporte para REST
+
+### Prisma
+
+- Tipado fuerte
+- Migraciones controladas
+- Integración sencilla con PostgreSQL
+
+### React + React Query
+
+- Manejo eficiente de estado remoto
+- Separación clara de lógica y UI
+
+### PostgreSQL
+
+- Base de datos robusta
+- Soporte para relaciones complejas
+
+---
+
+## 10. Notas y Mejoras
+
+- No se implementaron estados en envíos
+- No se implementaron filtros avanzados (solo paginación)
+- Eliminación física por simplicidad
+- Se puede implementar soft delete
+- Se pueden agregar logs
+- Mejoras en responsive pendientes
+- Posible implementación de inventario
+
+---
+
+## 11. URL del Repositorio
+
+[AGREGAR URL AQUÍ]
+
+---
+
+## 12. Conclusión
+
+El sistema cumple con los requisitos planteados, implementando buenas prácticas, separación de responsabilidades y una arquitectura escalable lista para evolución futura.
