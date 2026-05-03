@@ -21,10 +21,11 @@ export const EditProductModal = ({ open, onClose, maskuuid }: Props) => {
   const { mutate, isPending } = useUpdateProductMutation();
 
   useEffect(() => {
+    if (!open || !data) return;
     if (data) {
       form.setFieldsValue(data);
     }
-  }, [data]);
+  }, [data, open]);
 
   const handleSubmit = (values: any) => {
     mutate(

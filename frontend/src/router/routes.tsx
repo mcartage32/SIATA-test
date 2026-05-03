@@ -8,7 +8,7 @@ const Register = lazy(() => import("@/containers/pages/auth/Register"));
 const Clients = lazy(() => import("@/containers/pages/clients"));
 const Products = lazy(() => import("@/containers/pages/products"));
 const Ports = lazy(() => import("@/containers/pages/ports"));
-const Warehouses = () => <div>Bodegas pagina</div>;
+const Warehouses = lazy(() => import("@/containers/pages/warehouses"));
 const Shipments = () => <div>Envios pagina</div>;
 
 // Rutas publicas
