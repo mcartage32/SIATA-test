@@ -7,6 +7,9 @@ const ENDPOINTS = {
   PRODUCTS_LIST: "/products",
   PRODUCTS_SELECT_OPTIONS: "/products/select",
   PRODUCTS_ID: (maskuuid: string) => `/products/${maskuuid}`,
+  PORTS_LIST: "/ports",
+  PORTS_ID: (maskuuid: string) => `/ports/${maskuuid}`,
+  PORTS_SELECT_OPTIONS: "/ports/select",
 };
 
 export default ENDPOINTS;

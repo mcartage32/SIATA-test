@@ -39,7 +39,9 @@ export const CreateProductModal = ({ open, onClose }: Props) => {
 
   return (
     <Modal
-      title="Crear producto"
+      title={
+        <div className="text-center text-lg font-semibold">Crear Producto</div>
+      }
       open={open}
       onCancel={onClose}
       onOk={() => form.submit()}
