@@ -1,5 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
-import { CreateShipmentDto, ShipmentType } from './dtos/create-shipment.dto.js';
+import {
+  CreateShipmentDto,
+  ShipmentType,
+} from '../dtos/create-shipment.dto.js';
 
 export class ShipmentDomain {
   // =========================

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -16,14 +14,20 @@ import {
 } from './constants/shipment.select.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { validateFutureDate } from '../common/utils/date.util.js';
-import { ShipmentDomain } from './shipment.domain.js';
 import { getPagination } from '../common/utils/pagination.util.js';
 import { QueryShipmentDto } from './dtos/query-shipment.dto.js';
 import { UpdateShipmentDto } from './dtos/update-shipment.dto.js';
+import { ShipmentDomain } from './domain/shipment.domain.js';
+import { ShipmentItemsService } from './domain/shipment-items.service.js';
+import { ShipmentPricingService } from './domain/shipment-pricing.service.js';
 
 @Injectable()
 export class ShipmentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly shipmentItemsService: ShipmentItemsService,
+    private readonly shipmentPricingService: ShipmentPricingService,
+  ) {}
 
   // Metodo para generar el numero de guia unico con validacion en BD
   private async generateUniqueGuideNumber(
@@ -63,16 +67,13 @@ export class ShipmentService {
     try {
       return await this.prisma.$transaction(async (tx) => {
         // =========================
-        // 0. DOMAIN VALIDATIONS
+        // VALIDATIONS
         // =========================
         ShipmentDomain.validateCreationInput(dto);
         ShipmentDomain.validateTypeSpecific(dto);
 
         const deliveryDate = validateFutureDate(dto.deliveryDate);
 
-        // =========================
-        // 1. CLIENT
-        // =========================
         const client = await tx.client.findUnique({
           where: { mask_uuid: dto.clientMaskUuid },
           select: { id: true },
@@ -81,95 +82,48 @@ export class ShipmentService {
         if (!client) throw new NotFoundException('Client not found');
 
         // =========================
-        // 2. PRODUCTS
+        // PRODUCTS
         // =========================
-        const productIds = dto.items.map((i) => i.productMaskUuid);
-
-        const products = await tx.product.findMany({
-          where: {
-            mask_uuid: { in: productIds },
-          },
-          select: {
-            id: true,
-            mask_uuid: true,
-            price: true,
-          },
-        });
-
-        if (products.length !== dto.items.length) {
-          throw new NotFoundException('One or more products not found');
-        }
-
-        // =========================
-        // 3. CALCULATE PRICES
-        // =========================
-        let basePrice = 0;
-
-        const productMap = new Map(products.map((p) => [p.mask_uuid, p]));
-
-        const itemsData = dto.items.map((item) => {
-          const product = productMap.get(item.productMaskUuid);
-
-          if (!product) {
-            throw new NotFoundException(
-              `Product not found: ${item.productMaskUuid}`,
-            );
-          }
-
-          const total = Number(product.price) * item.quantity;
-
-          basePrice += total;
-
-          return {
-            product_id: product.id,
-            quantity: item.quantity,
-            unit_price: product.price,
-            total_price: total,
-          };
-        });
-
-        // =========================
-        // 4. DISCOUNT LOGIC
-        // =========================
-        const totalQuantity = dto.items.reduce(
-          (acc, item) => acc + item.quantity,
-          0,
+        const products = await this.shipmentItemsService.getValidatedProducts(
+          tx,
+          dto.items,
         );
 
-        const discountPercent = ShipmentDomain.calculateDiscount(
+        const itemsData = this.shipmentItemsService.buildItems(
+          products,
+          dto.items,
+        );
+
+        // =========================
+        // PRICING
+        // =========================
+        const pricing = this.shipmentPricingService.calculate(
           dto.type,
-          totalQuantity,
+          dto.items,
+          products,
         );
 
-        const discountAmount = (basePrice * discountPercent) / 100;
-        const totalPrice = basePrice - discountAmount;
-
-        ShipmentDomain.validateTotalPrice(totalPrice);
-
         // =========================
-        // 5. CREATE SHIPMENT
+        // CREATE SHIPMENT
         // =========================
         const shipment = await tx.shipment.create({
           data: {
             type: dto.type,
             client_id: client.id,
-            base_price: basePrice,
-            discount_percent: discountPercent,
-            discount_amount: discountAmount,
-            total_price: totalPrice,
+            base_price: pricing.basePrice,
+            discount_percent: pricing.discountPercent,
+            discount_amount: pricing.discountAmount,
+            total_price: pricing.totalPrice,
             guide_number: await this.generateUniqueGuideNumber(tx),
             created_by: userEmail,
             delivery_date: deliveryDate,
           },
           select: {
             id: true,
-            ...SHIPMENT_SELECT,
+            ...SHIPMENT_DETAIL_SELECT,
           },
         });
 
-        // =========================
-        // 6. CREATE ITEMS
-        // =========================
         await tx.shipment_item.createMany({
           data: itemsData.map((item) => ({
             ...item,
@@ -177,18 +131,13 @@ export class ShipmentService {
           })),
         });
 
-        // =========================
-        // 7. TYPE SPECIFIC
-        // =========================
         if (dto.type === ShipmentType.LAND) {
           const warehouse = await tx.warehouse.findUnique({
             where: { mask_uuid: dto.warehouseMaskUuid! },
             select: { id: true },
           });
 
-          if (!warehouse) {
-            throw new NotFoundException('Warehouse not found');
-          }
+          if (!warehouse) throw new NotFoundException('Warehouse not found');
 
           await tx.land_shipment.create({
             data: {
@@ -206,9 +155,7 @@ export class ShipmentService {
             select: { id: true },
           });
 
-          if (!port) {
-            throw new NotFoundException('Port not found');
-          }
+          if (!port) throw new NotFoundException('Port not found');
 
           await tx.sea_shipment.create({
             data: {
@@ -314,15 +261,17 @@ export class ShipmentService {
         const shipmentId = existing.id;
 
         // =========================
-        // 2. VALIDACIONES
+        // 2. VALIDACIONES FECHA
         // =========================
-
         let deliveryDate: Date | undefined;
+
         if (dto.deliveryDate) {
           deliveryDate = validateFutureDate(dto.deliveryDate);
         }
 
-        // Validaciones por tipo
+        // =========================
+        // 3. VALIDACIONES POR TIPO
+        // =========================
         if (existing.type === ShipmentType.LAND) {
           if (dto.portMaskUuid || dto.fleetNumber) {
             throw new BadRequestException(
@@ -340,10 +289,9 @@ export class ShipmentService {
         }
 
         // =========================
-        // 3. PREPARAR UPDATE BASE
+        // 4. UPDATE BASE OBJECT
         // =========================
-
-        const updateData: any = {
+        const updateData: Prisma.shipmentUpdateInput = {
           updated_by: userEmail,
           updated_at: new Date(),
         };
@@ -353,72 +301,40 @@ export class ShipmentService {
         }
 
         // =========================
-        // 4. ITEMS (SI VIENEN)
+        // 5. ITEMS
         // =========================
         if (dto.items?.length) {
-          const productIds = dto.items.map((i) => i.productMaskUuid);
+          // 5.1 Productos validados
+          const productsRaw =
+            await this.shipmentItemsService.getValidatedProducts(tx, dto.items);
 
-          const products = await tx.product.findMany({
-            where: { mask_uuid: { in: productIds } },
-            select: {
-              id: true,
-              mask_uuid: true,
-              price: true,
-            },
-          });
+          const products = productsRaw.map((p) => ({
+            id: p.id,
+            mask_uuid: p.mask_uuid,
+            price: Number(p.price), // FIX Decimal → number
+          }));
 
-          if (products.length !== dto.items.length) {
-            throw new NotFoundException('One or more products not found');
-          }
-
-          let basePrice = 0;
-
-          const productMap = new Map(products.map((p) => [p.mask_uuid, p]));
-
-          const itemsData = dto.items.map((item) => {
-            const product = productMap.get(item.productMaskUuid)!;
-
-            const total = Number(product.price) * item.quantity;
-            basePrice += total;
-
-            return {
-              product_id: product.id,
-              quantity: item.quantity,
-              unit_price: product.price,
-              total_price: total,
-            };
-          });
-
-          const totalQuantity = dto.items.reduce(
-            (acc, item) => acc + item.quantity,
-            0,
+          // Items listos
+          const itemsData = this.shipmentItemsService.buildItems(
+            products,
+            dto.items,
           );
 
-          if (
-            !Object.values(ShipmentType).includes(existing.type as ShipmentType)
-          ) {
-            throw new BadRequestException('Invalid shipment type');
-          }
-
-          const discountPercent = ShipmentDomain.calculateDiscount(
+          // Pricing
+          const pricing = this.shipmentPricingService.calculate(
             existing.type as ShipmentType,
-            totalQuantity,
+            dto.items,
+            products,
           );
 
-          const discountAmount = (basePrice * discountPercent) / 100;
-          const totalPrice = basePrice - discountAmount;
-
-          ShipmentDomain.validateTotalPrice(totalPrice);
-
-          // actualizar precios
           Object.assign(updateData, {
-            base_price: basePrice,
-            discount_percent: discountPercent,
-            discount_amount: discountAmount,
-            total_price: totalPrice,
+            base_price: pricing.basePrice,
+            discount_percent: pricing.discountPercent,
+            discount_amount: pricing.discountAmount,
+            total_price: pricing.totalPrice,
           });
 
-          // reemplazar items
+          // Reemplazar items (eliminar y crear)
           await tx.shipment_item.deleteMany({
             where: { shipment_id: shipmentId },
           });
@@ -432,7 +348,7 @@ export class ShipmentService {
         }
 
         // =========================
-        // 5. UPDATE SHIPMENT
+        // 6. UPDATE SHIPMENT
         // =========================
         await tx.shipment.update({
           where: { id: shipmentId },
@@ -444,9 +360,8 @@ export class ShipmentService {
         });
 
         // =========================
-        // 6. LOGÍSTICA
+        // 7. Terrerstre (cambiar bodega o placa de vehiculo)
         // =========================
-
         if (existing.type === ShipmentType.LAND) {
           if (dto.warehouseMaskUuid || dto.vehiclePlate) {
             const warehouse = dto.warehouseMaskUuid
@@ -464,7 +379,9 @@ export class ShipmentService {
               where: { shipment_id: shipmentId },
               data: {
                 ...(warehouse && { warehouse_id: warehouse.id }),
-                ...(dto.vehiclePlate && { vehicle_plate: dto.vehiclePlate }),
+                ...(dto.vehiclePlate && {
+                  vehicle_plate: dto.vehiclePlate,
+                }),
                 updated_by: userEmail,
                 updated_at: new Date(),
               },
@@ -472,6 +389,9 @@ export class ShipmentService {
           }
         }
 
+        // =========================
+        // 8. Maritimo (cambiar puerto o flota)
+        // =========================
         if (existing.type === ShipmentType.SEA) {
           if (dto.portMaskUuid || dto.fleetNumber) {
             const port = dto.portMaskUuid
@@ -489,7 +409,9 @@ export class ShipmentService {
               where: { shipment_id: shipmentId },
               data: {
                 ...(port && { port_id: port.id }),
-                ...(dto.fleetNumber && { fleet_number: dto.fleetNumber }),
+                ...(dto.fleetNumber && {
+                  fleet_number: dto.fleetNumber,
+                }),
                 updated_by: userEmail,
                 updated_at: new Date(),
               },
@@ -498,7 +420,7 @@ export class ShipmentService {
         }
 
         // =========================
-        // 7. RESPONSE SEGURO
+        // 9. RESPONSE FINAL
         // =========================
         return tx.shipment.findUnique({
           where: { id: shipmentId },
