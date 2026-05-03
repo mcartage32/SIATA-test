@@ -6,6 +6,7 @@ import { QueryProductDto } from './dtos/query-product.dto.js';
 import { PRODUCT_SELECT } from './constants/product.select.js';
 import { handlePrismaError } from '../common/errors/prisma-error.handler.js';
 import { getPagination } from '../common/utils/pagination.util.js';
+import { assertNotUsedInShipments } from '../common/utils/relation-checker.util.js';
 
 @Injectable()
 export class ProductService {
@@ -99,15 +100,34 @@ export class ProductService {
     }
   }
 
-  async remove(maskUuid: string) {
+  async remove(maskUuid: string): Promise<{ message: string }> {
     try {
-      await this.prisma.product.delete({
-        where: { mask_uuid: maskUuid },
-      });
+      return await this.prisma.$transaction(async (tx) => {
+        const product = await tx.product.findUnique({
+          where: { mask_uuid: maskUuid },
+          select: { id: true },
+        });
 
-      return { message: 'Product deleted successfully' };
+        if (!product) {
+          throw new NotFoundException('Product not found');
+        }
+
+        await assertNotUsedInShipments(tx, {
+          shipment_item: {
+            some: {
+              product_id: product.id,
+            },
+          },
+        });
+
+        await tx.product.delete({
+          where: { id: product.id },
+        });
+
+        return { message: 'Product deleted successfully' };
+      });
     } catch (error) {
-      return handlePrismaError(error);
+      handlePrismaError(error);
     }
   }
 }

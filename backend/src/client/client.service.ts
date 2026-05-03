@@ -6,6 +6,7 @@ import { UpdateClientDto } from './dtos/update-client.dto.js';
 import { CLIENT_SELECT } from './constants/client.select.js';
 import { handlePrismaError } from '../common/errors/prisma-error.handler.js';
 import { getPagination } from '../common/utils/pagination.util.js';
+import { assertNotUsedInShipments } from '../common/utils/relation-checker.util.js';
 
 @Injectable()
 export class ClientService {
@@ -104,11 +105,26 @@ export class ClientService {
 
   async remove(maskUuid: string): Promise<{ message: string }> {
     try {
-      await this.prisma.client.delete({
-        where: { mask_uuid: maskUuid },
-      });
+      return await this.prisma.$transaction(async (tx) => {
+        const client = await tx.client.findUnique({
+          where: { mask_uuid: maskUuid },
+          select: { id: true },
+        });
 
-      return { message: 'Client deleted successfully' };
+        if (!client) {
+          throw new NotFoundException('Client not found');
+        }
+
+        await assertNotUsedInShipments(tx, {
+          client_id: client.id,
+        });
+
+        await tx.client.delete({
+          where: { id: client.id },
+        });
+
+        return { message: 'Client deleted successfully' };
+      });
     } catch (error) {
       handlePrismaError(error);
     }

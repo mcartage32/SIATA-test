@@ -6,6 +6,7 @@ import { QueryWarehouseDto } from './dtos/query-warehouse.dto.js';
 import { WAREHOUSE_SELECT } from './constants/warehouse.select.js';
 import { handlePrismaError } from '../common/errors/prisma-error.handler.js';
 import { getPagination } from '../common/utils/pagination.util.js';
+import { assertNotUsedInShipments } from '../common/utils/relation-checker.util.js';
 
 @Injectable()
 export class WarehouseService {
@@ -101,11 +102,30 @@ export class WarehouseService {
 
   async remove(maskUuid: string) {
     try {
-      await this.prisma.warehouse.delete({
-        where: { mask_uuid: maskUuid },
-      });
+      return await this.prisma.$transaction(async (tx) => {
+        const warehouse = await tx.warehouse.findUnique({
+          where: { mask_uuid: maskUuid },
+          select: { id: true },
+        });
 
-      return { message: 'Warehouse deleted successfully' };
+        if (!warehouse) {
+          throw new NotFoundException('Warehouse not found');
+        }
+
+        await assertNotUsedInShipments(tx, {
+          land_shipment: {
+            is: {
+              warehouse_id: warehouse.id,
+            },
+          },
+        });
+
+        await tx.warehouse.delete({
+          where: { id: warehouse.id },
+        });
+
+        return { message: 'Warehouse deleted successfully' };
+      });
     } catch (error) {
       return handlePrismaError(error);
     }

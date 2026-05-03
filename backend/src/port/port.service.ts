@@ -6,6 +6,7 @@ import { QueryPortDto } from './dtos/query-port.dto.js';
 import { PORT_SELECT } from './constants/port.select.js';
 import { handlePrismaError } from '../common/errors/prisma-error.handler.js';
 import { getPagination } from '../common/utils/pagination.util.js';
+import { assertNotUsedInShipments } from '../common/utils/relation-checker.util.js';
 
 @Injectable()
 export class PortService {
@@ -99,15 +100,34 @@ export class PortService {
     }
   }
 
-  async remove(maskUuid: string) {
+  async remove(maskUuid: string): Promise<{ message: string }> {
     try {
-      await this.prisma.port.delete({
-        where: { mask_uuid: maskUuid },
-      });
+      return await this.prisma.$transaction(async (tx) => {
+        const port = await tx.port.findUnique({
+          where: { mask_uuid: maskUuid },
+          select: { id: true },
+        });
 
-      return { message: 'Port deleted successfully' };
+        if (!port) {
+          throw new NotFoundException('Port not found');
+        }
+
+        await assertNotUsedInShipments(tx, {
+          sea_shipment: {
+            is: {
+              port_id: port.id,
+            },
+          },
+        });
+
+        await tx.port.delete({
+          where: { id: port.id },
+        });
+
+        return { message: 'Port deleted successfully' };
+      });
     } catch (error) {
-      return handlePrismaError(error);
+      handlePrismaError(error);
     }
   }
 }
