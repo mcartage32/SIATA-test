@@ -10,7 +10,9 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 - Orquestación: Docker
 
 ---
+
 ## 2. Estructura del proyecto
+
 ```text
 ├── backend/
 │   ├── prisma/
@@ -29,7 +31,7 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 │   │   │   └── validators/
 │   │   ├── generated/
 │   │   ├── interfaces/
-│   │   ├── port/         # Esta misa estructura se repite en los demas modulos
+│   │   ├── port/         # Esta misma estructura se repite en los demas modulos
 │   │   │   ├── constants/
 │   │   │   ├── dtos/
 │   │   │   ├── port.controller.ts
@@ -61,7 +63,7 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 │   │   │   ├── layout/
 │   │   │   └── pages/
 │   │   │       ├── auth/
-│   │   │       ├── clients/              # Estos mismo archivos o estructura se repite en los demas modulos (ports, products,etc)
+│   │   │       ├── clients/              # Estos mismos archivos o estructura se repite en los demas modulos (ports, products,etc)
 │   │   │       │   ├── ClientColumns.tsx
 │   │   │       │   ├── CreateClientModal.tsx
 │   │   │       │   ├── EditClientModal.tsx
@@ -85,8 +87,22 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 │   └── package.json
 └── README.md
 ```
+
 ---
-## 3. Tecnologías Utilizadas
+
+## 3. Requisitos Previos
+
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
+
+- Node.js 20+
+- PostgreSQL
+- Bun o npm
+
+> **Nota:** El proyecto esta configurado para correr en los puertos determinados: postgres en 5432, NestJs en 300 y React en 5173
+
+---
+
+## 4. Tecnologías Utilizadas
 
 ### Backend
 
@@ -108,9 +124,137 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 
 ---
 
-## 4. Diagrama E-R (Descripción)
+## 5. Variables de Entorno
 
-Entidades principales:
+### Backend
+
+```env
+DATABASE_URL="postgresql://root:root@localhost:5432/postgres"
+PORT=3000
+JWT_SECRET=clave_para_prueba_SIATA
+```
+
+### Frontend
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+---
+
+## 6. Instalación y Ejecución
+
+### 6.1 Instalación y ejecución con Docker
+
+> **Nota:** Luego de clonar el repositorio, se debe crear los respectivos archivos .env en las carpetas backend y frontend, con los respectivos valores.
+
+Desde la raíz del proyecto, ejecuta el siguiente comando para levantar la base de datos, el backend y el frontend automáticamente:
+
+```bash
+docker compose up --build
+```
+
+### 6.2 Backend
+
+1. Ir al directorio:
+
+```bash
+cd backend
+```
+
+2. Instalar dependencias:
+
+```bash
+bun install
+```
+
+o
+
+```bash
+npm install
+```
+
+3. Crea el archivo .env
+
+```env
+DATABASE_URL="postgresql://root:root@localhost:5432/postgres"
+PORT=3000
+JWT_SECRET=clave_para_prueba_SIATA
+```
+
+4. Generar cliente de Prisma:
+
+```bash
+bunx prisma generate
+```
+
+5. Ejecutar migraciones:
+
+```bash
+bunx prisma migrate dev
+```
+
+6. (Recomendación) Ejecutar seed:
+
+```bash
+bunx prisma db seed
+```
+
+7. Iniciar servidor:
+
+```bash
+bun run start:dev
+```
+
+El backend correrá en:
+
+```
+http://localhost:3000/graphql
+```
+
+---
+
+### 6.3 Frontend
+
+1. Ir al directorio:
+
+```bash
+cd frontend
+```
+
+2. Instalar dependencias:
+
+```bash
+bun install
+```
+
+o
+
+```bash
+npm install
+```
+
+3. Crear archivo .env
+
+```env
+VITE_API_URL=http://localhost:3000/graphql
+```
+
+4. Ejecutar proyecto:
+
+```bash
+bun dev
+```
+
+El frontend correrá en:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 7. Diagrama E-R (Descripción)
 
 - client (1) --- (N) shipment
 - shipment (1) --- (N) shipment_item
@@ -122,7 +266,7 @@ Entidades principales:
 
 ---
 
-## 5. Script de Base de Datos
+## 8. Script de Base de Datos
 
 Se utiliza Prisma para la generación del esquema.
 
@@ -133,17 +277,15 @@ Ejemplo UUID:
 
 ---
 
-## 6. API
+## 9. API RESTFUL
 
 Documentación disponible en:
 
 http://localhost:3000/api/docs
 
-Tipo: REST
-
 ---
 
-## 7. Reglas de Negocio
+## 10. Reglas de Negocio
 
 Los envíos solo permiten actualizar:
 
@@ -156,7 +298,7 @@ Los envíos solo permiten actualizar:
 
 ---
 
-## 8. Artefactos de Despliegue
+## 11. Artefactos de Despliegue
 
 Se incluyen:
 
@@ -172,7 +314,7 @@ docker compose up --build
 
 ---
 
-## 9. Buenas Prácticas Aplicadas
+## 12. Buenas Prácticas Aplicadas
 
 - Separación por capas (controller, service, repository)
 - DTOs para validación
@@ -185,7 +327,7 @@ docker compose up --build
 
 ---
 
-## 10. Justificación Tecnológica
+## 13. Justificación Tecnológica
 
 ### NestJS
 
@@ -211,25 +353,25 @@ docker compose up --build
 
 ---
 
-## 11. Notas y Mejoras
+## 14. Notas y Mejoras
 
 - No se implementaron estados en envíos
 - No se implementaron filtros avanzados (solo paginación)
 - Eliminación física por simplicidad
 - Se puede implementar soft delete
 - Se pueden agregar logs
-- Mejoras en responsive pendientes
+- Mejoras en responsive
 - Posible implementación de inventario
 - No se desplego en algun servidor publico por cuestiones de tiempo.
 
 ---
 
-## 12. URL del Repositorio
+## 15. URL del Repositorio
 
 https://github.com/mcartage32/SIATA-test.git
 
 ---
 
-## 13. Conclusión
+## 16. Conclusión
 
 El sistema cumple con los requisitos planteados, implementando buenas prácticas, separación de responsabilidades y una arquitectura escalable lista para evolución futura.
