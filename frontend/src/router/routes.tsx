@@ -4,15 +4,22 @@ import { lazy } from "react";
 
 // Componentes de prueba
 const Login = lazy(() => import("@/containers/pages/auth/Login"));
-const Dashboard = () => <div>Dashboard Page</div>;
-const Appointments = () => <div>Appointments Page</div>;
-const Reports = () => <div>Reports Page</div>;
+const Register = lazy(() => import("@/containers/pages/auth/Register"));
+const Clients = () => <div>Clientes pagina</div>;
+const Products = () => <div>Productos pagina</div>;
+const Ports = () => <div>Puertos pagina</div>;
+const Warehouses = () => <div>Bodegas pagina</div>;
+const Shipments = () => <div>Envios pagina</div>;
 
 // Rutas publicas
 export const publicRoutes: { component: React.FC; path: string }[] = [
   {
     path: PUBLIC_ROUTE.LOGIN,
     component: Login,
+  },
+  {
+    path: PUBLIC_ROUTE.REGISTER,
+    component: Register,
   },
 ];
 
@@ -26,16 +33,24 @@ export const privateRoutes: {
   }[];
 }[] = [
   {
-    path: PRIVATE_ROUTE.DASHBOARD,
-    component: Dashboard,
+    path: PRIVATE_ROUTE.CLIENTS,
+    component: Clients,
   },
   {
-    path: PRIVATE_ROUTE.APPOINTMENTS,
-    component: Appointments,
+    path: PRIVATE_ROUTE.PRODUCTS,
+    component: Products,
   },
   {
-    path: PRIVATE_ROUTE.REPORTS,
-    component: Reports,
+    path: PRIVATE_ROUTE.PORTS,
+    component: Ports,
+  },
+  {
+    path: PRIVATE_ROUTE.WAREHOUSES,
+    component: Warehouses,
+  },
+  {
+    path: PRIVATE_ROUTE.SHIPMENTS,
+    component: Shipments,
   },
   //   {
   //     path: PRIVATE_ROUTE.PROSPECTS,

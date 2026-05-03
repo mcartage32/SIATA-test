@@ -1,13 +1,14 @@
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
-// import { PUBLIC_ROUTE } from "@/constants";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
-import { FaRegCalendarCheck } from "react-icons/fa";
-import { LuUserRoundCheck } from "react-icons/lu";
-import { LuNotebookPen } from "react-icons/lu";
-import { MdOutlineBallot, MdLogout } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
+import { useAuth } from "@/hooks/useAuth";
+import { PRIVATE_ROUTE } from "@/constants";
+import { MdProductionQuantityLimits } from "react-icons/md";
+import { IoIosBoat } from "react-icons/io";
+import { MdWarehouse } from "react-icons/md";
+import { FaShippingFast } from "react-icons/fa";
 
 interface Props {
   selectedKey: string;
@@ -16,55 +17,32 @@ interface Props {
 
 export default function MenuSider({ selectedKey, setSelectedKey }: Props) {
   const navigate = useNavigate();
-
-  //   const handleMenuClick = ({ key }: { key: string }) => {
-  //     setSelectedKey(key);
-  //     switch (key) {
-  //       case "1":
-  //         navigate(PUBLIC_ROUTE.HOME);
-  //         break;
-  //       case "2":
-  //         navigate(PUBLIC_ROUTE.USERS);
-  //         break;
-  //       case "3":
-  //         navigate(PUBLIC_ROUTE.BOOKS);
-  //         break;
-  //       case "4":
-  //         navigate(PUBLIC_ROUTE.RESERVATIONS_GENERAL);
-  //         break;
-  //       case "5":
-  //         navigate(PUBLIC_ROUTE.RESERVATIONS_BY_USER);
-  //         break;
-  //       case "6":
-  //         navigate(PUBLIC_ROUTE.RESERVATIONS_BY_BOOK);
-  //         break;
-  //     }
-  //   };
+  const { logout } = useAuth();
+  const ICON_SIZE = 22;
 
   const handleMenuClick = ({ key }: { key: string }) => {
     setSelectedKey(key);
     switch (key) {
       case "1":
-        navigate("/dashboard");
+        navigate(PRIVATE_ROUTE.HOME);
         break;
       case "2":
-        navigate("/clients");
+        navigate(PRIVATE_ROUTE.CLIENTS);
         break;
       case "3":
-        navigate("/products");
+        navigate(PRIVATE_ROUTE.PRODUCTS);
         break;
       case "4":
-        navigate("/shipments");
+        navigate(PRIVATE_ROUTE.PORTS);
         break;
       case "5":
-        navigate("/shipments/land");
+        navigate(PRIVATE_ROUTE.WAREHOUSES);
         break;
       case "6":
-        navigate("/shipments/sea");
+        navigate(PRIVATE_ROUTE.SHIPMENTS);
         break;
       case "logout":
-        sessionStorage.removeItem("access_token");
-        navigate("/login");
+        logout();
         break;
     }
   };
@@ -81,47 +59,40 @@ export default function MenuSider({ selectedKey, setSelectedKey }: Props) {
       items={[
         {
           key: "1",
-          icon: <IoHomeOutline size={22} />,
+          icon: <IoHomeOutline size={ICON_SIZE} />,
           label: "Home",
         },
         {
           key: "2",
-          icon: <FaRegUser size={22} />,
-          label: "Usuarios",
+          icon: <FaRegUser size={ICON_SIZE} />,
+          label: "Clientes",
         },
         {
           key: "3",
-          icon: <FaBook size={18} />,
-          label: "Libros",
+          icon: <MdProductionQuantityLimits size={ICON_SIZE} />,
+          label: "Productos",
         },
         {
-          key: "333",
-          icon: <FaRegCalendarCheck size={18} />,
-          label: "Reservas",
-          children: [
-            {
-              key: "4",
-              icon: <MdOutlineBallot size={18} />,
-              label: "General",
-            },
-            {
-              key: "5",
-              icon: <LuUserRoundCheck size={18} />,
-              label: "Por usuario",
-            },
-            {
-              key: "6",
-              icon: <LuNotebookPen size={18} />,
-              label: "Por libro",
-            },
-          ],
+          key: "4",
+          icon: <IoIosBoat size={ICON_SIZE} />,
+          label: "Puertos",
+        },
+        {
+          key: "5",
+          icon: <MdWarehouse size={ICON_SIZE} />,
+          label: "Bodegas",
+        },
+        {
+          key: "6",
+          icon: <FaShippingFast size={ICON_SIZE} />,
+          label: "Envios",
         },
         {
           type: "divider",
         },
         {
           key: "logout",
-          icon: <MdLogout size={20} color="red" />,
+          icon: <MdLogout size={ICON_SIZE} color="red" />,
           label: "Cerrar sesión",
           danger: true,
         },

@@ -1,9 +1,9 @@
 import { Form, Input, Button, Card, Typography } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-// import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import "./Login.scss";
 import { useNavigate } from "react-router-dom";
-import { PRIVATE_ROUTE } from "@/constants";
+import { PUBLIC_ROUTE } from "@/constants";
 
 const { Title } = Typography;
 
@@ -13,17 +13,11 @@ type LoginFormValues = {
 };
 
 const Login = () => {
-  //   const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const onFinish = (values: LoginFormValues) => {
-    //login(values);
-    console.log(values);
-    sessionStorage.setItem(
-      "access_token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5AdGVzdC5jbyIsImlhdCI6MTc3Nzc3MDY4NCwiZXhwIjoxNzc3NzkyMjg0fQ.IqSU-2lSbUcDIl55DIg5sQLx9rRJviVzbCIksPYbcQ8",
-    );
-    navigate(PRIVATE_ROUTE.HOME, { replace: true });
+    login(values);
   };
 
   return (
@@ -72,6 +66,12 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
+        <Button
+          className="login-back-btn"
+          onClick={() => navigate(PUBLIC_ROUTE.REGISTER)}
+        >
+          Registrar
+        </Button>
       </Card>
     </div>
   );

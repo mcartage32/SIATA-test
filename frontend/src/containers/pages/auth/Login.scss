@@ -40,6 +40,28 @@
   transform: scale(1.02);
 }
 
+.login-back-btn {
+  margin-top: 12px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+
+  transition: all 0.2s ease;
+}
+
+.login-back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+  color: #fff;
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.login-back-btn:active {
+  transform: scale(0.98);
+}
+
 // Responsive
 @media (max-width: 480px) {
   .login-card {
