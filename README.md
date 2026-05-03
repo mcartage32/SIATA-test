@@ -10,8 +10,83 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 - Orquestación: Docker
 
 ---
-
-## 2. Tecnologías Utilizadas
+## 2. Estructura del proyecto
+```text
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   ├── seeds/
+│   │   ├── schema.prisma
+│   │   └── seed.ts
+│   ├── src/
+│   │   ├── auth/
+│   │   ├── client/
+│   │   ├── common/
+│   │   │   ├── constants/
+│   │   │   ├── dtos/
+│   │   │   ├── errors/
+│   │   │   ├── utils/
+│   │   │   └── validators/
+│   │   ├── generated/
+│   │   ├── interfaces/
+│   │   ├── port/         # Esta misa estructura se repite en los demas modulos
+│   │   │   ├── constants/
+│   │   │   ├── dtos/
+│   │   │   ├── port.controller.ts
+│   │   │   ├── port.module.ts
+│   │   │   └── port.service.ts
+│   │   ├── prisma/
+│   │   ├── product/
+│   │   ├── shipment/
+│   │   ├── warehouse/
+│   │   ├── app.module.ts
+│   │   └── main.ts
+│   ├── .env
+│   ├── .env.example
+│   ├── .prettierrc
+│   ├── bun.lock
+│   ├── dockerfile
+│   ├── eslint.config.mjs
+│   ├── nest-cli.json
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── reactQuery/
+│   │   │   ├── axiosConfig.ts
+│   │   │   └── endpoints.ts
+│   │   ├── components/
+│   │   ├── constants/
+│   │   ├── containers/
+│   │   │   ├── layout/
+│   │   │   └── pages/
+│   │   │       ├── auth/
+│   │   │       ├── clients/              # Estos mismo archivos o estructura se repite en los demas modulos (ports, products,etc)
+│   │   │       │   ├── ClientColumns.tsx
+│   │   │       │   ├── CreateClientModal.tsx
+│   │   │       │   ├── EditClientModal.tsx
+│   │   │       │   └── index.tsx
+│   │   │       ├── ports/
+│   │   │       ├── products/
+│   │   │       ├── shipments/
+│   │   │       └── warehouses/
+│   │   ├── hooks/
+│   │   ├── interfaces/
+│   │   ├── router/
+│   │   ├── main.css
+│   │   └── main.tsx
+│   ├── .dockerignore
+│   ├── .env
+│   ├── .env.example
+│   ├── bun.lock
+│   ├── dockerfile
+│   ├── eslint.config.js
+│   ├── index.html
+│   └── package.json
+└── README.md
+```
+---
+## 3. Tecnologías Utilizadas
 
 ### Backend
 
@@ -33,7 +108,7 @@ Sistema fullstack para la gestión de envíos (terrestres y marítimos), constru
 
 ---
 
-## 3. Diagrama E-R (Descripción)
+## 4. Diagrama E-R (Descripción)
 
 Entidades principales:
 
@@ -47,7 +122,7 @@ Entidades principales:
 
 ---
 
-## 4. Script de Base de Datos
+## 5. Script de Base de Datos
 
 Se utiliza Prisma para la generación del esquema.
 
@@ -58,7 +133,7 @@ Ejemplo UUID:
 
 ---
 
-## 5. API
+## 6. API
 
 Documentación disponible en:
 
@@ -68,7 +143,7 @@ Tipo: REST
 
 ---
 
-## 6. Reglas de Negocio
+## 7. Reglas de Negocio
 
 Los envíos solo permiten actualizar:
 
@@ -81,7 +156,7 @@ Los envíos solo permiten actualizar:
 
 ---
 
-## 7. Artefactos de Despliegue
+## 8. Artefactos de Despliegue
 
 Se incluyen:
 
@@ -97,7 +172,7 @@ docker compose up --build
 
 ---
 
-## 8. Buenas Prácticas Aplicadas
+## 9. Buenas Prácticas Aplicadas
 
 - Separación por capas (controller, service, repository)
 - DTOs para validación
@@ -110,7 +185,7 @@ docker compose up --build
 
 ---
 
-## 9. Justificación Tecnológica
+## 10. Justificación Tecnológica
 
 ### NestJS
 
@@ -136,7 +211,7 @@ docker compose up --build
 
 ---
 
-## 10. Notas y Mejoras
+## 11. Notas y Mejoras
 
 - No se implementaron estados en envíos
 - No se implementaron filtros avanzados (solo paginación)
@@ -145,15 +220,16 @@ docker compose up --build
 - Se pueden agregar logs
 - Mejoras en responsive pendientes
 - Posible implementación de inventario
+- No se desplego en algun servidor publico por cuestiones de tiempo.
 
 ---
 
-## 11. URL del Repositorio
+## 12. URL del Repositorio
 
 https://github.com/mcartage32/SIATA-test.git
 
 ---
 
-## 12. Conclusión
+## 13. Conclusión
 
 El sistema cumple con los requisitos planteados, implementando buenas prácticas, separación de responsabilidades y una arquitectura escalable lista para evolución futura.
