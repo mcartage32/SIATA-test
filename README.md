@@ -317,7 +317,7 @@ docker compose up --build
 
 ## 12. Buenas Prácticas Aplicadas
 
-- Separación por capas (controller, service, repository)
+- Separación de responsabilidades (Controller / Service / Repository)
 - DTOs para validación
 - Uso de interfaces tipadas en frontend
 - Manejo de estado con React Query
@@ -325,7 +325,10 @@ docker compose up --build
 - Normalización de base de datos
 - Uso de UUID como identificador externo
 - Evitar lógica en controladores
-
+- Arquitectura modular basada en dominios
+- Principio de responsabilidad única (SRP)
+- Uso de Prisma como ORM con migraciones controladas
+  
 ---
 
 ## 13. Justificación Tecnológica
@@ -363,6 +366,7 @@ docker compose up --build
 - Se pueden agregar logs
 - Mejoras en responsive
 - Posible implementación de inventario
+- Mayor reutilizacion de componentes en el front
 - No se desplego en algun servidor publico por cuestiones de tiempo.
 
 ---
