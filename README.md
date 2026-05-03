@@ -355,6 +355,12 @@ docker compose up --build
 - Base de datos robusta
 - Soporte para relaciones complejas
 
+## Patrones de diseño
+
+- Arquitectura en capas (Controller → Service → Repository)
+- Modularización por dominio
+- Inyección de dependencias (NestJS DI Container)
+
 ---
 
 ## 14. Notas y Mejoras
