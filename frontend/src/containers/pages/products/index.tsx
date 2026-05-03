@@ -1,47 +1,48 @@
 import { useState } from "react";
 import { Button } from "antd";
-import { useClientsListQuery, useDeleteClientMutation } from "@/api/reactQuery";
 import { TableCustom } from "@/components/TableCustom";
-import { getClientColumns } from "./ClientColumns";
-import { CreateClientModal } from "./CreateClientModal";
+import {
+  useProductsListQuery,
+  useDeleteProductMutation,
+} from "@/api/reactQuery";
 import { createNotification } from "@/components/NotificationCustom";
-import { EditClientModal } from "./EditClientModal";
+import { getProductColumns } from "./ProductColumns";
+import { CreateProductModal } from "./CreateProductModal";
+import { EditProductModal } from "./EditProductModal";
 
-const ClientsPage = () => {
+const ProductsPage = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<string>("");
-  const { mutate: deleteClient } = useDeleteClientMutation();
-  const { data, isLoading } = useClientsListQuery({
-    page,
-    limit,
-  });
+  const [selected, setSelected] = useState("");
+  const { data, isLoading } = useProductsListQuery({ page, limit });
+  const { mutate: deleteProduct } = useDeleteProductMutation();
 
-  // Ejecuta la mutacion delete directamente
   const handleDelete = (maskuuid: string) => {
-    deleteClient(maskuuid, {
+    deleteProduct(maskuuid, {
       onSuccess: () => {
         createNotification.success({
           title: "Eliminado",
-          description: "Cliente eliminado correctamente",
+          description: "Producto eliminado correctamente",
         });
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (error: any) => {
         const message = error?.response?.data?.message;
+
         if (message === "Entity is used in shipments") {
           createNotification.error({
             title: "Error",
             description:
-              "No se puede eliminar este cliente ya que tiene envios asociados.",
+              "No se puede eliminar este producto porque está asociado a envíos.",
           });
           return;
         }
+
         createNotification.error({
           title: "Error",
-          description: "No se pudo eliminar este cliente.",
+          description: "No se pudo eliminar el producto.",
         });
       },
     });
@@ -50,45 +51,47 @@ const ClientsPage = () => {
   return (
     <>
       <TableCustom
-        title="Clientes"
+        title="Productos"
         data={data?.data || []}
         loading={isLoading}
         total={data?.total || 0}
         page={page}
         pageSize={limit}
-        onPageChange={(p, size) => {
+        onPageChange={(p, s) => {
           setPage(p);
-          setLimit(size);
+          setLimit(s);
         }}
-        columns={getClientColumns({
+        columns={getProductColumns({
+          currentPage: page,
+          pageSize: limit,
           onEdit: (maskuuid) => {
-            setSelectedClient(maskuuid);
+            setSelected(maskuuid);
             setOpenEdit(true);
           },
           onDelete: handleDelete,
-          currentPage: page,
-          pageSize: limit,
         })}
         extra={
           <Button type="primary" onClick={() => setOpenCreate(true)}>
-            Crear cliente
+            Crear producto
           </Button>
         }
       />
-      <CreateClientModal
+
+      <CreateProductModal
         open={openCreate}
         onClose={() => setOpenCreate(false)}
       />
-      <EditClientModal
+
+      <EditProductModal
         open={openEdit}
         onClose={() => {
           setOpenEdit(false);
-          setSelectedClient("");
+          setSelected("");
         }}
-        maskuuid={selectedClient}
+        maskuuid={selected}
       />
     </>
   );
 };
 
-export default ClientsPage;
+export default ProductsPage;

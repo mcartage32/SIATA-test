@@ -6,7 +6,7 @@ import { lazy } from "react";
 const Login = lazy(() => import("@/containers/pages/auth/Login"));
 const Register = lazy(() => import("@/containers/pages/auth/Register"));
 const Clients = lazy(() => import("@/containers/pages/clients"));
-const Products = () => <div>Productos pagina</div>;
+const Products = lazy(() => import("@/containers/pages/products"));
 const Ports = () => <div>Puertos pagina</div>;
 const Warehouses = () => <div>Bodegas pagina</div>;
 const Shipments = () => <div>Envios pagina</div>;
