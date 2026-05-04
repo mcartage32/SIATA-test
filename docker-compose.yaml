@@ -24,6 +24,7 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://root:root@db:5432/postgres
+      JWT_SECRET: clave_para_prueba_SIATA
     depends_on:
       - db
     command: >
