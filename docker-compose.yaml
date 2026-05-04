@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15
-    container_name: SIATA-db
+    container_name: siata-db
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: root
@@ -15,7 +15,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: SIATA-backend
+    container_name: siata-backend
     ports:
       - "3000:3000"
     volumes:
@@ -28,11 +28,8 @@ services:
       - db
     command: >
       sh -c "
-      echo '⏳ Esperando DB...' &&
-      sleep 5 &&
       npx prisma generate &&
-      npx prisma migrate reset --force &&
-      npx prisma db push &&
+      npx prisma migrate dev &&
       npm run prisma:seed:node &&
       npm run start:dev
       "
@@ -41,7 +38,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: SIATA-frontend
+    container_name: siata-frontend
     ports:
       - "5173:5173"
     volumes:

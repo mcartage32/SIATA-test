@@ -11,9 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        secret: config.getOrThrow<string>('JWT_SECRET'),
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET as string,
         // Se establece tiempo de 6 horas solo por temas de la prueba
         signOptions: { expiresIn: '6h' },
       }),
