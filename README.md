@@ -147,19 +147,17 @@ VITE_API_URL=http://localhost:3000/api/v1/
 
 ## 6. Instalación y Ejecución
 
+> **Nota:** El backend incluye datos de prueba (seed) con un usuario administrador precargado para facilitar el acceso al sistema.
+
+Credenciales:
+- Email: admin@test.co  
+- Password: 123456
+
 ### 6.1 Instalación y ejecución con Docker
 
 > **Nota:** Luego de clonar el repositorio, se deben crear los respectivos archivos `.env` en las carpetas `backend` y `frontend`, con sus respectivos valores.
 
-Antes de levantar el entorno con Docker, es necesario preparar el backend instalando dependencias y generando el cliente de Prisma para asegurar la correcta inicialización del ORM.
-
-```bash
-cd backend
-bun install
-bunx prisma generate
-```
-Esto garantiza que el cliente de Prisma esté correctamente generado antes de la ejecución del contenedor.
-Una vez realizado este paso, desde la raíz del proyecto ejecuta el siguiente comando:
+Desde la raíz del proyecto, ejecuta el siguiente comando para levantar la base de datos, el backend y el frontend automáticamente:
 
 ```bash
 docker compose up --build
@@ -287,8 +285,16 @@ Ejemplo UUID:
 - No se usa uuid-ossp
 
 ---
+## 9. Credenciales de acceso (Seed)
 
-## 9. API RESTFUL
+El backend incluye datos de prueba para facilitar el acceso al sistema.
+
+### Usuario administrador
+
+- Email: admin@test.co  
+- Password: 123456
+
+## 10. API RESTFUL
 
 Documentación disponible en:
 
@@ -296,7 +302,7 @@ http://localhost:3000/api/docs
 
 ---
 
-## 10. Reglas de Negocio
+## 11. Reglas de Negocio
 
 Los envíos solo permiten actualizar:
 
@@ -309,7 +315,7 @@ Los envíos solo permiten actualizar:
 
 ---
 
-## 11. Artefactos de Despliegue
+## 12. Artefactos de Despliegue
 
 Se incluyen:
 
@@ -325,7 +331,7 @@ docker compose up --build
 
 ---
 
-## 12. Buenas Prácticas Aplicadas
+## 13. Buenas Prácticas Aplicadas
 
 - Separación de responsabilidades (Controller / Service / Repository)
 - DTOs para validación
@@ -342,7 +348,7 @@ docker compose up --build
   
 ---
 
-## 13. Justificación Tecnológica
+## 14. Justificación Tecnológica
 
 ### NestJS
 
@@ -374,7 +380,7 @@ docker compose up --build
 
 ---
 
-## 14. Notas y Mejoras
+## 15. Notas y Mejoras
 
 - No se implementaron estados en envíos
 - No se implementaron filtros avanzados (solo paginación)
@@ -388,12 +394,12 @@ docker compose up --build
 
 ---
 
-## 15. URL del Repositorio
+## 16. URL del Repositorio
 
 https://github.com/mcartage32/SIATA-test.git
 
 ---
 
-## 16. Conclusión
+## 17. Conclusión
 
 El sistema cumple con los requisitos planteados, implementando buenas prácticas, separación de responsabilidades y una arquitectura escalable lista para evolución futura.
