@@ -149,9 +149,17 @@ VITE_API_URL=http://localhost:3000/api/v1/
 
 ### 6.1 Instalación y ejecución con Docker
 
-> **Nota:** Luego de clonar el repositorio, se deben crear los respectivos archivos .env en las carpetas backend y frontend, con los respectivos valores.
+> **Nota:** Luego de clonar el repositorio, se deben crear los respectivos archivos `.env` en las carpetas `backend` y `frontend`, con sus respectivos valores.
 
-Desde la raíz del proyecto, ejecuta el siguiente comando para levantar la base de datos, el backend y el frontend automáticamente:
+Antes de levantar el entorno con Docker, es necesario preparar el backend instalando dependencias y generando el cliente de Prisma para asegurar la correcta inicialización del ORM.
+
+```bash
+cd backend
+bun install
+bunx prisma generate
+```
+Esto garantiza que el cliente de Prisma esté correctamente generado antes de la ejecución del contenedor.
+Una vez realizado este paso, desde la raíz del proyecto ejecuta el siguiente comando:
 
 ```bash
 docker compose up --build
