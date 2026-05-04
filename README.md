@@ -330,6 +330,7 @@ docker compose up --build
 - Arquitectura modular basada en dominios
 - Principio de responsabilidad única (SRP)
 - Uso de Prisma como ORM con migraciones controladas
+- Implementación de autenticación basada en JWT para protección de rutas privadas
   
 ---
 
