@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
@@ -13,14 +11,14 @@ export class CreatePortDto {
   @IsNotEmpty()
   @NoHtml({ message: 'HTML is not allowed' })
   @NoEmptyOrSpaces({ message: 'Name cannot be empty or contain only spaces' })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name!: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   @NoHtml({ message: 'HTML is not allowed' })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @NoEmptyOrSpaces({
     message: 'Location cannot be empty or contain only spaces',
   })

@@ -3,6 +3,7 @@ import { Modal, Form, Input } from "antd";
 import { useEffect } from "react";
 import { useCreateClientMutation } from "@/api/reactQuery";
 import { createNotification } from "@/components/NotificationCustom";
+import { noOnlySpaces } from "@/utils/formValidators";
 
 interface Props {
   open: boolean;
@@ -36,8 +37,7 @@ export const CreateClientModal = ({ open, onClose }: Props) => {
           form.resetFields();
           onClose();
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onError: (error: any) => {
+        onError: (error) => {
           const message = error?.response?.data?.message;
 
           if (message === "Duplicate value violation") {
@@ -78,7 +78,10 @@ export const CreateClientModal = ({ open, onClose }: Props) => {
         <Form.Item
           label="Nombre"
           name="name"
-          rules={[{ required: true, message: "El nombre es obligatorio" }]}
+          rules={[
+            { required: true, message: "El nombre es obligatorio" },
+            noOnlySpaces("El nombre no puede contener solo espacios"),
+          ]}
         >
           <Input placeholder="Ej: Juan Pérez" />
         </Form.Item>

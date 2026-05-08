@@ -7,6 +7,7 @@ import {
 import axiosInstance from "../axiosConfig";
 import ENDPOINTS from "../endpoints";
 import type {
+  ApiError,
   IClient,
   ICreateClientPayload,
   IPaginatedResponse,
@@ -14,6 +15,7 @@ import type {
   ISelectOption,
   IUpdateClientPayload,
 } from "@/interfaces";
+import type { AxiosError } from "axios";
 
 export const useClientsListQuery = (params?: IPaginationParams) => {
   return useQuery({
@@ -58,7 +60,7 @@ export const useClientDetailQuery = (maskuuid?: string) => {
 
 export const useCreateClientMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<unknown, AxiosError<ApiError>, ICreateClientPayload>({
     mutationFn: async (payload: ICreateClientPayload) => {
       const response = await axiosInstance.post(
         ENDPOINTS.CLIENTS_LIST,
@@ -82,7 +84,11 @@ export const useCreateClientMutation = () => {
 export const useUpdateClientMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<
+    unknown,
+    AxiosError<ApiError>,
+    { maskuuid: string; payload: IUpdateClientPayload }
+  >({
     mutationFn: async ({
       maskuuid,
       payload,

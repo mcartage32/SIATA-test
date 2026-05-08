@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input } from "antd";
 import { useEffect } from "react";
 import {
@@ -57,7 +56,7 @@ export const EditClientModal = ({ open, onClose, maskuuid }: Props) => {
 
           onClose();
         },
-        onError: (error: any) => {
+        onError: (error) => {
           const message =
             error?.response?.data?.message === "Duplicate value violation"
               ? "Ya existe un cliente registrado con este email"
