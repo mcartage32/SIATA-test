@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/api/reactQuery";
 import { createNotification } from "@/components/NotificationCustom";
 import "./Login.scss";
+import { noOnlySpaces } from "@/utils/formValidators";
 
 const { Title } = Typography;
 
@@ -23,12 +24,9 @@ const Register = () => {
           title: "Usuario creado",
           description: "Registro exitoso. Ahora puedes iniciar sesión.",
         });
-
         navigate(-1);
       },
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onError: (error: any) => {
+      onError: (error) => {
         const message = error?.response?.data?.message || "Error desconocido";
 
         if (message === "Email already in use") {
@@ -78,7 +76,14 @@ const Register = () => {
           <Form.Item
             label="Contraseña"
             name="password"
-            rules={[{ required: true, message: "Ingresa tu contraseña" }]}
+            rules={[
+              { required: true, message: "Ingresa tu contraseña" },
+              {
+                min: 6,
+                message: "La contraseña debe tener al menos 6 caracteres",
+              },
+              noOnlySpaces("La contraseña no puede estar vacía"),
+            ]}
           >
             <Input.Password
               prefix={<LockOutlined />}

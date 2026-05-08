@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import "./Login.scss";
 import { useNavigate } from "react-router-dom";
 import { PUBLIC_ROUTE } from "@/constants";
+import { noOnlySpaces } from "@/utils/formValidators";
 
 const { Title } = Typography;
 
@@ -51,7 +52,10 @@ const Login = () => {
           <Form.Item
             label="Contraseña"
             name="password"
-            rules={[{ required: true, message: "Ingresa tu contraseña" }]}
+            rules={[
+              { required: true, message: "Ingresa tu contraseña" },
+              noOnlySpaces("La contraseña no puede estar vacía"),
+            ]}
           >
             <Input.Password
               prefix={<LockOutlined />}

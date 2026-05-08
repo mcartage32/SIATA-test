@@ -4,3 +4,7 @@ export * from "./products";
 export * from "./ports";
 export * from "./warehouses";
 export * from "./shipments";
+
+export interface ApiError {
+  message: string;
+}
