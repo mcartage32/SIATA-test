@@ -100,8 +100,8 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 
 > **Nota 1:** El proyecto está configurado para correr en los puertos determinados: postgres en 5432, NestJs en 300 y React en 5173
 
-
 > **Nota 2:** La prueba fue desarrollada utilizando Bun tanto en el backend como en el frontend. Se recomienda su uso como runtime principal debido a su rendimiento y eficiencia en la instalación y ejecución de dependencias.
+
 ---
 
 ## 4. Tecnologías Utilizadas
@@ -122,11 +122,11 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 - Axios
 - Ant Design
 - TailwindCSS
-- Zustand
 
 ---
 
 ## 5. Variables de Entorno
+
 > **Nota:** Estas variables están definidas para un entorno de desarrollo y pruebas. En un entorno de producción, deben configurarse de forma segura y externa al repositorio.
 
 ### Backend
@@ -150,7 +150,8 @@ VITE_API_URL=http://localhost:3000/api/v1/
 > **Nota:** El backend incluye datos de prueba (seed) con un usuario administrador precargado para facilitar el acceso al sistema.
 
 Credenciales:
-- Email: admin@test.co  
+
+- Email: admin@test.co
 - Password: 123456
 
 ### 6.1 Instalación y ejecución con Docker
@@ -285,13 +286,14 @@ Ejemplo UUID:
 - No se usa uuid-ossp
 
 ---
+
 ## 9. Credenciales de acceso (Seed)
 
 El backend incluye datos de prueba para facilitar el acceso al sistema.
 
 ### Usuario administrador
 
-- Email: admin@test.co  
+- Email: admin@test.co
 - Password: 123456
 
 ## 10. API RESTFUL
@@ -345,7 +347,7 @@ docker compose up --build
 - Principio de responsabilidad única (SRP)
 - Uso de Prisma como ORM con migraciones controladas
 - Implementación de autenticación basada en JWT para protección de rutas privadas
-  
+
 ---
 
 ## 14. Justificación Tecnológica
@@ -391,6 +393,7 @@ docker compose up --build
 - Posible implementación de inventario
 - Mayor reutilización de componentes en el front
 - No se desplegó en algún servidor público por cuestiones de tiempo.
+- Mejorar la reutilización de consultas utilizando métodos compatibles con transacciones (`tx`) en operaciones complejas
 
 ---
 

@@ -6,7 +6,7 @@ import { ShipmentDomain } from './shipment.domain.js';
 
 @Injectable()
 export class ShipmentPricingService {
-  calculate(
+  calculatePricing(
     type: ShipmentType,
     items: { quantity: number; productMaskUuid: string }[],
     products: { price: number; mask_uuid: string }[],

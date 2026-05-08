@@ -97,7 +97,7 @@ export class ShipmentService {
         // =========================
         // PRICING
         // =========================
-        const pricing = this.shipmentPricingService.calculate(
+        const pricing = this.shipmentPricingService.calculatePricing(
           dto.type,
           dto.items,
           products,
@@ -321,7 +321,7 @@ export class ShipmentService {
           );
 
           // Pricing
-          const pricing = this.shipmentPricingService.calculate(
+          const pricing = this.shipmentPricingService.calculatePricing(
             existing.type as ShipmentType,
             dto.items,
             products,
