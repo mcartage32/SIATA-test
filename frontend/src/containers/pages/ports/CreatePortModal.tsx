@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input } from "antd";
 import { useEffect } from "react";
 import { useCreatePortMutation } from "@/api/reactQuery";
@@ -10,11 +9,16 @@ interface Props {
   onClose: () => void;
 }
 
+interface FormValues {
+  name: string;
+  location?: string | null;
+}
+
 export const CreatePortModal = ({ open, onClose }: Props) => {
   const [form] = Form.useForm();
   const { mutate, isPending } = useCreatePortMutation();
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: FormValues) => {
     mutate(values, {
       onSuccess: () => {
         createNotification.success({

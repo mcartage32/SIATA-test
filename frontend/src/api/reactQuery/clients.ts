@@ -112,7 +112,7 @@ export const useUpdateClientMutation = () => {
 
 export const useDeleteClientMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<unknown, AxiosError<ApiError>, string>({
     mutationFn: async (maskuuid: string) => {
       const response = await axiosInstance.delete(
         ENDPOINTS.CLIENTS_ID(maskuuid),

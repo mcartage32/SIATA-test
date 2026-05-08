@@ -28,8 +28,7 @@ const ClientsPage = () => {
           description: "Cliente eliminado correctamente",
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onError: (error: any) => {
+      onError: (error) => {
         const message = error?.response?.data?.message;
         if (message === "Entity is used in shipments") {
           createNotification.error({

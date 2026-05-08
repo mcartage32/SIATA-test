@@ -1,14 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input } from "antd";
 import { useEffect } from "react";
 import { usePortDetailQuery, useUpdatePortMutation } from "@/api/reactQuery";
 import { createNotification } from "@/components/NotificationCustom";
+import { noOnlySpaces } from "@/utils/formValidators";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   maskuuid: string;
+}
+
+export interface FormValues {
+  name?: string;
+  location?: string | null;
 }
 
 export const EditPortModal = ({ open, onClose, maskuuid }: Props) => {
@@ -26,7 +31,7 @@ export const EditPortModal = ({ open, onClose, maskuuid }: Props) => {
     }
   }, [data, open]);
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: FormValues) => {
     mutate(
       {
         maskuuid,
@@ -63,7 +68,14 @@ export const EditPortModal = ({ open, onClose, maskuuid }: Props) => {
       cancelText="Cancelar"
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item name="name" label="Nombre" rules={[{ required: true }]}>
+        <Form.Item
+          name="name"
+          label="Nombre"
+          rules={[
+            { required: true },
+            noOnlySpaces("El nombre no puede estar vacío"),
+          ]}
+        >
           <Input />
         </Form.Item>
 
